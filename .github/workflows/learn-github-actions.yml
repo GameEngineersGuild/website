@@ -2,11 +2,19 @@ name: learn-github-actions
 on: [push]
 
 jobs:
-  check-bats-version:
+  build-website:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: jorelali/setup-elm@v2
         with:
           elm-version: 0.19.1
-      - run: elm make src/Main.elm
+      - run: elm make src/Main.elm --output=elm.js
+      - uses: actions/upload-artifact@v2
+        with: 
+          name: website-artifact
+          path: |
+             index.html
+             error.html
+             elm.js
+             home.css
