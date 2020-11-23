@@ -2,9 +2,9 @@
 elm-stuff
 # elm-repl generated files
 repl-temp-*
-.idea/elm-test.iml
-.idea/jsLibraryMappings.xml
-.idea/modules.xml
-.idea/workspace.xml
-.idea/codeStyles/codeStyleConfig.xml
-.idea/inspectionProfiles/profiles_settings.xml
+
+# Jetbrain Project Files
+.idea/**/*
+
+# Output
+dist/elm.js

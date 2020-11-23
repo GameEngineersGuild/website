@@ -1,1 +1,1 @@
-elm.exe make src/Main.elm --output=elm.js
+elm.exe make src/Main.elm --output=dist/elm.js
