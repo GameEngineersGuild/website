@@ -8,8 +8,16 @@ type alias Episode =
         description: String
     }
 
+-- repostatus.org
 type ProjectStatus =
     Active
+    | Concept
+    | WIP
+    | Suspended
+    | Abandoned
+    | Inactive
+    | Unsupported
+    | Moved
 
 type alias Project =
     { name: String
