@@ -16,5 +16,6 @@ jobs:
           path: |
              index.html
              error.html
+             app.js
              dist/elm.js
              home.css

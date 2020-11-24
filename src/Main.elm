@@ -6,48 +6,37 @@ import Html.Attributes exposing (..)
 
 import Html.Events exposing (onClick)
 import Url exposing (..)
+import GEGTypes exposing (..)
+import Ports exposing (setStorage)
+import Svg.Attributes exposing (mode)
 
+type alias Flags = Int
 -- Main
-
+ 
+main : Program Flags Model Msg
 main =
-    Browser.sandbox { init = init, update = update, view = view }
+    Browser.document 
+    { init = init
+    , update = updateWithStorage
+    , view = view
+    , subscriptions = \_ -> Sub.none
+    }
 
 
 -- MODEL
-
-type alias Episode =
-    {
-        title: String,
-        recordingDate: String,
-        filename: String,
-        description: String
-    }
-
-type ProjectStatus =
-    Active
-
-type alias Project =
-    { name: String
-    , description: String
-    , url: String
-    , status: ProjectStatus
-    }
-
-type alias GuildMember = 
-    { displayName: String
-    }
-
 type alias Model =
-    { count: Int
+    { redHounds: Int
+    , sessionPets: Int
     , weeklyUpdateEpisodes: List Episode
     , projects: List Project
     , guildMembers: List GuildMember
     }
 
 
-init : Model
-init =
-    { count = 0
+init : Flags -> ( Model, Cmd msg )
+init flags =
+    ({ redHounds = flags
+    , sessionPets = 0
     , weeklyUpdateEpisodes =
         [{ title = "We have a Website!"
             , recordingDate = "2020/11/18"
@@ -99,29 +88,54 @@ init =
         , { displayName = "JT" }
         , { displayName = "GameDevSam" }
         ]
-    }
+    }, Cmd.none
+    )
 
 -- UPDATE
 
 type Msg
     = NoOp
-    | Increment
-    | Decrement
-    | Reset
+    | GainRedhound
+    | PetDoggo
+    | BigDoggoPet
 
-update : Msg -> Model -> Model
+
+{-| We want to `setStorage` on every update. This function adds the setStorage
+command for every step of the update function.
+-}
+updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
+updateWithStorage msg model =
+    let
+        ( newModel, cmds ) =
+            update msg model
+    in
+        ( newModel
+        , Cmd.batch [ setStorage newModel.redHounds, cmds ]
+        )
+        
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         NoOp ->
-            model
-        Increment ->
-            { model | count = model.count + 1 }
-
-        Decrement ->
-            { model | count = model.count - 1 }
-
-        Reset ->
-            { model | count = 0 }
+            ( model, Cmd.none )
+        GainRedhound ->
+            (   { model 
+                | redHounds = model.redHounds + 1 
+                }
+            , Cmd.none 
+            )
+        PetDoggo -> 
+            ( { model 
+                | redHounds = model.redHounds - 1, sessionPets = model.sessionPets + 1
+                }
+            , Cmd.none
+            )
+        BigDoggoPet -> 
+            ( { model 
+                | redHounds = model.redHounds - 10, sessionPets = model.sessionPets + 10
+                }
+            , Cmd.none
+            )
 
 
 renderEpisode : Episode -> Html Msg
@@ -175,9 +189,19 @@ renderGuildMember guildMember =
         ]
 -- View
 
-view : Model -> Html Msg
+view : Model -> Document Msg
 view model =
-    div [ class "container" ]
+    { title = "GEG"
+    , body = [
+        nav [ class "navbar navbar-inverse navbar-fixed-top" ]
+        [ div [ class "container" ]
+            [ div [ class "navbar-header" ]
+                [ a [ class "navbar-brand", href "#" ] 
+                    [ text "Game Engineers' Guild" ]
+                ]
+            ]
+        ]
+        , div [ class "container" ]
         [ div [ class "page-header" ]
             [ h1 [] [ text "It's like Devchat ", small [] [ text "but across the Game Industry" ] ]
             ]
@@ -203,16 +227,58 @@ view model =
         ]
         
         -- Fun interactivity
+        , br [] []
+        , h3 [] [ text "Games" ]
         , div [ class "row" ]
-        [ h3 [] [ text "Games" ]
-        , div [ class "input-group" ]
-            [ span [ class "input-group-btn" ]
-                [ button [ class "btn btn-default", onClick Increment ] [ text "+" ]
-                ]
-            , input [ class "form-control", value (String.fromInt model.count) ] [  ]
-            , span [ class "input-group-btn" ]
-                [ button [ class "btn btn-default", onClick Reset ] [ text "Reset" ]
-                ]
+        [ div [ class "col-md-6" ]
+            [ p [] 
+                [ text "Stored in your browser's local storage:"
+                , code [] [ text "geg-redhounds" ] ]
+            , renderPetDoggo model.redHounds
+            , renderDoggoPetResponse model.sessionPets
             ]
+        , br [] []
         ]
+    ]
+    ]
+    }
+
+renderDoggoPetResponse : Int -> Html Msg
+renderDoggoPetResponse numPets = 
+    div [] 
+    [ if numPets == 1 then
+        p [] [ text "Doggo loved the pet" ]
+    else if numPets > 1 then
+        -- let numPets = String.fromInt model.sessionPets in
+        let petText = "Doggo loved the "++(String.fromInt numPets)++" pets" in
+        p [] [ text petText ]
+    else Html.text ""
+    , if numPets >= 10 then 
+        p [] [ text "Omg, so many pets! "]
+    else Html.text ""
+    , if numPets >= 69 then 
+        p [] [ text "Nice"]
+    else Html.text ""
+    , if numPets >= 100 then 
+        p [] [ text "Too many pets! I can't even react!"]
+    else Html.text ""
+    ]
+
+renderPetDoggo : Int -> Html Msg
+renderPetDoggo redHounds =
+    div [ class "input-group" ]
+    [ span [ class "input-group-btn" ]
+        [ button [ class "btn btn-success", onClick GainRedhound ] [ text "Gain a Redhound (RH)" ]
         ]
+    , input [ class "form-control", disabled True, value (String.fromInt redHounds) ] [  ]
+    , if redHounds >= 1 then 
+        span [ class "input-group-btn" ]
+        [ button [ class "btn btn-warning", onClick PetDoggo ] [ text "Pet Doggo (1 RH)" ] ]
+    else
+        Html.text ""
+    , if redHounds >= 10 then 
+        span [ class "input-group-btn" ]
+        [ button [ class "btn btn-danger", onClick BigDoggoPet ] [ text "Big Doggo Pet (10 RH)" ] ]
+    else
+        Html.text ""
+    ]
