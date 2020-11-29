@@ -1,12 +1,4 @@
-module GEGTypes exposing (..)
-
-type alias Episode =
-    {
-        title: String,
-        recordingDate: String,
-        filename: String,
-        description: String
-    }
+module Data.Project exposing (..)
 
 -- repostatus.org
 type ProjectStatus =
@@ -24,8 +16,4 @@ type alias Project =
     , description: String
     , url: String
     , status: ProjectStatus
-    }
-
-type alias GuildMember = 
-    { displayName: String
     }

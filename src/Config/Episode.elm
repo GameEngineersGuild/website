@@ -1,8 +1,9 @@
-module LocalEntities exposing (..)
-import GEGTypes exposing (..)
+module Config.Episode exposing (..)
+import Data.Episode exposing (..)
 
-weeklyUpdateEpisodes : List Episode
-weeklyUpdateEpisodes =
+
+entries : List Episode
+entries =
     [{ title = "We have a Website!"
         , recordingDate = "2020/11/18"
         , filename = "2020-11-18 12-06-35.mp3"
@@ -34,32 +35,4 @@ weeklyUpdateEpisodes =
         , description = """In this episode, we talk about Quantum Mechanics, Quantum Computings and Quantum Consciousness.
         Basically a bunch of topics that game engineers shouldn't talk about with any authority."""
     }
-    ]
-
-
-projects : List Project
-projects  = 
-    [{ name = "This Website"
-        , description = """The official website for the Game Engineers' Guild."""
-        , url = "https://github.com/GameEngineersGuild/website"
-        , status = Active
-    }
-    , { name = "Phoyeur"
-        , description = """A chain match adventure game and testbed for the GameSauce LiveOps Platform."""
-        , url = "http://gamesauce.bitkitchen.net/phoyeur"
-        , status = Active
-    }
-    , { name = "ZBuild"
-        , description = """A python build system meant to help Unity developers generate multi-platform builds and upload those builds to storefronts, like Itch.io and Steam."""
-        , status = Inactive
-        , url = "https://github.com/czarzappy/EZBuild"
-    }
-    ]
-
-guildMembers : List GuildMember
-guildMembers = 
-    [{ displayName = "Zappy" }
-    , { displayName = "aaron" }
-    , { displayName = "JT" }
-    , { displayName = "GameDevSam" }
     ]

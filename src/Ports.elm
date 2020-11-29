@@ -1,4 +1,5 @@
 port module Ports exposing (..)
+import AppData exposing (AppData)
 
 
-port setStorage : Int -> Cmd msg
+port setStorage : AppData -> Cmd msg
