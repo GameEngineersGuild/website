@@ -3,7 +3,13 @@ import GEGTypes exposing (..)
 
 weeklyUpdateEpisodes : List Episode
 weeklyUpdateEpisodes =
-    [{ title = "We have a Website!"
+    [{ title = "Hotels En Colombia"
+    , recordingDate = "2020/12/02"
+    , filename = "2020-12-02+12-16-14.mp3"
+    , description = """In this episode, we talk about an SSL puzzler. (Audio is a bit messy)
+    """
+    }
+    ,{ title = "We have a Website!"
         , recordingDate = "2020/11/18"
         , filename = "2020-11-18 12-06-35.mp3"
         , description = """In this episode, we talk about the new website, the Game Engineers' Guild, 
